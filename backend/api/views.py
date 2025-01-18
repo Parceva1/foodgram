@@ -1,16 +1,15 @@
-from rest_framework import status
+from rest_framework import mixins, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets, mixins
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.generics import get_object_or_404
-from rest_framework.authtoken.models import Token
+from users.models import User
 
 from .pagination import CustomPagination
-from users.models import User
-from .serializers import (TokenObtainSerializer, SignUpSerializer,
-                          UserSerializer, PasswordChangeSerializer,
-                          UserAvatarSerializer)
+from .serializers import (PasswordChangeSerializer, SignUpSerializer,
+                          TokenObtainSerializer, UserAvatarSerializer,
+                          UserSerializer)
 
 
 class UserViewSet(viewsets.GenericViewSet,

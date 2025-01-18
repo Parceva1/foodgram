@@ -1,17 +1,15 @@
-from rest_framework import status
+from api.permissions import IsAuthorOrReadOnly
+from django.http import HttpResponse
+from rest_framework import status, viewsets
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
-from rest_framework.permissions import (IsAuthenticatedOrReadOnly,
-                                        IsAuthenticated, AllowAny)
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from django.http import HttpResponse
 
-from .models import Recipe, ShoppingCart, Favorite, Ingredient, Tag
-from .serializers import (IngredientSerializer,
-                          RecipeSerializer, ShoppingCartSerializer,
-                          TagSerializer)
-from api.permissions import IsAuthorOrReadOnly
+from .models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from .serializers import (IngredientSerializer, RecipeSerializer,
+                          ShoppingCartSerializer, TagSerializer)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

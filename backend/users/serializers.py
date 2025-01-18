@@ -1,9 +1,9 @@
+from api.serializers import Base64ImageField
+from recipes.models import Recipe
+from recipes.serializers import RecipeMinifiedSerializer
 from rest_framework import serializers
 
 from .models import Subscription
-from recipes.models import Recipe
-from api.serializers import Base64ImageField
-from recipes.serializers import RecipeMinifiedSerializer
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

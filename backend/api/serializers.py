@@ -1,11 +1,10 @@
 import base64
 
-from rest_framework import serializers
 from django.contrib.auth import authenticate
-from django.core.files.base import ContentFile
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-
+from django.core.files.base import ContentFile
+from rest_framework import serializers
 from users.models import User, validate_username
 
 
