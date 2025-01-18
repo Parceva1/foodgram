@@ -18,7 +18,7 @@ services:
       - db
     volumes:
       - static:/backend_static
-      - media:/media/
+      - media:/app/media/
 
   
   frontend:
@@ -35,7 +35,7 @@ services:
     ports:
       - 8000:80
     volumes:
-      - static:/staticfiles
-      - media:/media/
+      - static:/staticfiles/
+      - media:/app/media/
     depends_on:
       - frontend
