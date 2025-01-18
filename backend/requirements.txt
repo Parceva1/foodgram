@@ -14,3 +14,4 @@ djoser==2.2.3
 django-filter==23.5
 python-dotenv
 django-docker-helpers
+olefile

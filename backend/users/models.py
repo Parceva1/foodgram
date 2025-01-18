@@ -48,15 +48,23 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ('username',)
-    
+
     def get_username(self):
         return self.email
 
+
 class Subscription(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscribed_users')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscribers')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='subscribed_users'
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='subscribers'
+    )
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user', 'author'], name='unique_subscription')
+            models.UniqueConstraint(fields=['user', 'author'],
+                                    name='unique_subscription')
         ]

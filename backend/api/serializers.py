@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 
 from users.models import User, validate_username
 
+
 class TokenObtainSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
@@ -30,6 +31,7 @@ class TokenObtainSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+
 
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=254, required=True)
@@ -56,11 +58,14 @@ class SignUpSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-    def validate(self, data):  
+    def validate(self, data):
         email = data.get('email')
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({'email': 'Пользователь с таким email уже существует.'})
+            raise serializers.ValidationError(
+                {'email': 'Пользователь с таким email уже существует.'}
+            )
         return data
+
 
 class Base64ImageField(serializers.ImageField):
     def to_internal_value(self, data):
@@ -72,6 +77,7 @@ class Base64ImageField(serializers.ImageField):
 
         return super().to_internal_value(data)
 
+
 class UserAvatarSerializer(serializers.ModelSerializer):
     avatar = Base64ImageField(required=False, allow_null=True)
 
@@ -79,19 +85,23 @@ class UserAvatarSerializer(serializers.ModelSerializer):
         model = User
         fields = ['avatar']
 
+
 class UserSerializer(serializers.ModelSerializer):
     avatar = Base64ImageField(required=False)
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'first_name', 'last_name', 'avatar', 'is_subscribed')
+        fields = ('id', 'email', 'username',
+                  'first_name', 'last_name',
+                  'avatar', 'is_subscribed')
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.subscribers.filter(user=request.user).exists()
         return False
+
 
 class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField(required=True)
@@ -103,4 +113,3 @@ class PasswordChangeSerializer(serializers.Serializer):
         except ValidationError as e:
             raise serializers.ValidationError(e.messages)
         return value
-
