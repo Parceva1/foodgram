@@ -99,7 +99,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "docker-compose.production.yml"
-          target: "kittygram"
+          target: "foodgram"
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
