@@ -25,14 +25,12 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
-    depends_on:
-      - backend
-
+  
   gateway:
     image: esskaz/foodgram_gateway
     env_file: .env
     volumes:
-      - static:/staticfiles
+      - static:/static/
       - media:/app/media/
     ports:
       - 8888:80
