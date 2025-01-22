@@ -87,15 +87,16 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'docs',
-# ]
+STATIC_URL = '/collected_static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+STATICFILES_DIRS = [
+    BASE_DIR / 'docs',
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, '/backend_static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '/app/media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
