@@ -26,6 +26,7 @@ services:
     volumes:
       - static:/frontend_static
   
+  
   gateway:
     image: esskaz/foodgram_gateway
     env_file: .env
