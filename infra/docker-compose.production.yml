@@ -35,7 +35,7 @@ services:
     image: esskaz/foodgram_gateway
     env_file: .env
     volumes:
-      - static:/backend_static/
+      - static:/staticfiles/
       - media:/app/media/
     ports:
       - 8888:80
