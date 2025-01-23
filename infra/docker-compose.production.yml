@@ -18,6 +18,8 @@ services:
     volumes:
       - static:/backend_static
       - media:/app/media/
+    depends_on:
+      - db
 
   frontend:
     image: esskaz/foodgram_frontend
@@ -25,6 +27,8 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
+    depends_on:
+      - backend
   
   
   gateway:
@@ -35,3 +39,5 @@ services:
       - media:/app/media/
     ports:
       - 8888:80
+    depends_on:
+      - frontend
