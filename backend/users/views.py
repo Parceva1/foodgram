@@ -2,24 +2,24 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
 from .models import Subscription, User
+from api.pagination import CustomPagination
 from .serializers import SubscriptionSerializer
 
 
-class SubscriptionView(APIView):
+class SubscriptionView(ListAPIView):
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = SubscriptionSerializer
 
-    def get(self, request):
-        subscriptions = Subscription.objects.filter(user=request.user)
-        serializer = SubscriptionSerializer(
-            subscriptions, many=True,
-            context={'request': request}
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return Subscription.objects.filter(user=self.request.user)
 
 
 class SubscribeView(APIView):
+    pagination_class = CustomPagination
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
