@@ -8,12 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
-from .serializers import (
-    IngredientSerializer,
-    RecipeInputSerializer,
-    RecipeOutputSerializer,
-    TagSerializer
-)
+from .serializers import (IngredientSerializer, RecipeInputSerializer,
+                          RecipeOutputSerializer, TagSerializer)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

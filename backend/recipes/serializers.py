@@ -1,10 +1,10 @@
 import logging
 
-from rest_framework import serializers
 from api.serializers import Base64ImageField, UserSerializer
-from .models import (Favorite, Ingredient,
-                     IngredientRecipe, Recipe, ShoppingCart, Tag)
+from rest_framework import serializers
 
+from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                     ShoppingCart, Tag)
 
 logger = logging.getLogger(__name__)
 
