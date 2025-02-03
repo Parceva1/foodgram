@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from .validators import validate_username
+from .users_constants import (MAX_EMAIL_LENGTH, MAX_NAME_LENGTH,
+                              MAX_PASSWORD_LENGTH, MAX_USERNAME_LENGTH)
 
 
 class User(AbstractUser):
@@ -9,34 +11,40 @@ class User(AbstractUser):
         'E-mail address',
         unique=True,
         blank=False,
-        max_length=256,
+        max_length=MAX_EMAIL_LENGTH,
     )
+
     username = models.CharField(
         'Username',
         unique=True,
         blank=False,
-        max_length=150,
+        max_length=MAX_USERNAME_LENGTH,
         validators=[validate_username]
     )
+
     first_name = models.CharField(
-        'first name',
-        max_length=150,
+        'First name',
+        max_length=MAX_NAME_LENGTH,
         blank=False,
     )
+
     last_name = models.CharField(
-        'last name',
-        max_length=150,
+        'Last name',
+        max_length=MAX_NAME_LENGTH,
         blank=False,
     )
+
     password = models.CharField(
-        'password',
+        'Password',
         blank=False,
-        max_length=150,
+        max_length=MAX_PASSWORD_LENGTH,
     )
+
     is_subscribed = models.BooleanField(
         'Is subscribed',
         default=False,
     )
+
     avatar = models.ImageField(
         upload_to='avatars/',
         blank=True,
@@ -58,12 +66,14 @@ class Subscription(models.Model):
         User, on_delete=models.CASCADE,
         related_name='subscribed_users'
     )
+
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='subscribers'
     )
 
     class Meta:
+        ordering = ('user',)
         constraints = [
             models.UniqueConstraint(fields=['user', 'author'],
                                     name='unique_subscription')
