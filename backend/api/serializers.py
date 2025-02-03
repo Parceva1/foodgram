@@ -5,13 +5,13 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag
 from rest_framework import serializers
 
-from users.models import Subscription, User, validate_username
 from .constants import (EMAIL_MAX_LENGTH, FIRST_NAME_MAX_LENGTH,
                         LAST_NAME_MAX_LENGTH, MAX_AMOUNT, MIN_AMOUNT,
                         USERNAME_MAX_LENGTH)
+from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag
+from users.models import Subscription, User, validate_username
 
 logger = logging.getLogger(__name__)
 
