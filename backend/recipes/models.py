@@ -1,11 +1,11 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from users.models import User
 from .recipes_constatnts import (MAX_COOKING_TIME, MAX_MEASUREMENT_UNIT_LENGTH,
                                  MAX_NAME_LENGTH, MAX_RECIPE_NAME_LENGTH,
                                  MAX_SLUG_LENGTH, MAX_TAG_NAME_LENGTH,
-                                 MIN_COOKING_TIME, )
+                                 MIN_COOKING_TIME)
 
 
 class Ingredient(models.Model):

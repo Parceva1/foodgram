@@ -1,24 +1,22 @@
+from django.http import HttpResponse
 from rest_framework import mixins, status, viewsets
 from rest_framework.authtoken.models import Token
-from rest_framework.generics import get_object_or_404
-from rest_framework.views import APIView
-from django.http import HttpResponse
+from rest_framework.generics import ListAPIView, get_object_or_404
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from rest_framework.generics import ListAPIView
 
-from .permissions import IsAuthorOrReadOnly
+from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
 from users.models import User
 from .pagination import CustomPagination
-from .serializers import (PasswordChangeSerializer, SignUpSerializer,
-                          TokenObtainSerializer, UserAvatarSerializer,
-                          UserSerializer)
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
-from .serializers import (IngredientSerializer, RecipeInputSerializer,
-                          RecipeOutputSerializer, TagSerializer,
-                          SubscriptionSerializer)
+from .permissions import IsAuthorOrReadOnly
+from .serializers import (IngredientSerializer, PasswordChangeSerializer,
+                          RecipeInputSerializer, RecipeOutputSerializer,
+                          SignUpSerializer, SubscriptionSerializer,
+                          TagSerializer, TokenObtainSerializer,
+                          UserAvatarSerializer, UserSerializer)
 
 
 class UserViewSet(viewsets.GenericViewSet,
