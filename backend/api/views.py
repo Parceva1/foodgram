@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
 from rest_framework import mixins, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import ListAPIView, get_object_or_404
@@ -8,15 +9,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
 from users.models import User
-from .pagination import CustomPagination
-from .permissions import IsAuthorOrReadOnly
-from .serializers import (IngredientSerializer, PasswordChangeSerializer,
-                          RecipeInputSerializer, RecipeOutputSerializer,
-                          SignUpSerializer, SubscriptionSerializer,
-                          TagSerializer, TokenObtainSerializer,
-                          UserAvatarSerializer, UserSerializer)
+from api.pagination import CustomPagination
+from api.permissions import IsAuthorOrReadOnly
+from api.serializers import (IngredientSerializer, PasswordChangeSerializer,
+                             RecipeInputSerializer, RecipeOutputSerializer,
+                             SignUpSerializer, SubscriptionSerializer,
+                             TagSerializer, TokenObtainSerializer,
+                             UserAvatarSerializer, UserSerializer)
 
 
 class UserViewSet(viewsets.GenericViewSet,
