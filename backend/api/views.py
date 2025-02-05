@@ -16,7 +16,7 @@ from api.serializers import (IngredientSerializer, PasswordChangeSerializer,
                              SignUpSerializer, SubscriptionSerializer,
                              TagSerializer, TokenObtainSerializer,
                              UserAvatarSerializer, UserSerializer)
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from recipes.models import Ingredient, Recipe, ShoppingCart, Tag
 from users.models import User
 
 
@@ -254,11 +254,9 @@ class ShoppingCartView(APIView):
                 {'error': 'Рецепт не найден.'},
                 status=status.HTTP_404_NOT_FOUND)
 
-        if ShoppingCart.objects.filter(
-                user=request.user, recipe=recipe).exists():
-            return Response(
-                {'error': 'Рецепт уже добавлен в корзину.'},
-                status=status.HTTP_400_BAD_REQUEST)
+        if request.user.shopping_cart.filter(recipe=recipe).exists():
+            return Response({'error': 'Рецепт уже добавлен в корзину.'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         ShoppingCart.objects.create(user=request.user, recipe=recipe)
         return Response(
@@ -276,20 +274,17 @@ class ShoppingCartView(APIView):
                 {'error': 'Рецепт не найден.'},
                 status=status.HTTP_404_NOT_FOUND)
 
-        ShoppingCart.objects.filter(
-            user=request.user,
-            recipe=recipe).delete()
-        return Response(
-            {'detail': 'Removed from shopping cart'},
-            status=status.HTTP_204_NO_CONTENT)
+        deleted, _ = request.user.shopping_cart.filter(recipe=recipe).delete()
+        if deleted:
+            return Response({'detail': 'Рецепт удален из корзины'},
+                            status=status.HTTP_204_NO_CONTENT)
 
 
 class DownloadShoppingCartView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        cart_items = ShoppingCart.objects.filter(
-            user=request.user).select_related('recipe')
+        cart_items = request.user.shopping_cart.select_related('recipe')
 
         if not cart_items.exists():
             return Response(
@@ -332,12 +327,13 @@ class FavoriteView(APIView):
                 {'error': 'Рецепт не найден.'},
                 status=status.HTTP_404_NOT_FOUND)
 
-        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
+        if request.user.favorites.filter(recipe=recipe).exists():
             return Response(
                 {'error': 'Рецепт уже добавлен в избранное.'},
-                status=status.HTTP_400_BAD_REQUEST)
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        Favorite.objects.create(user=request.user, recipe=recipe)
+        request.user.favorites.create(recipe=recipe)
         return Response(
             {'id': recipe.id, 'name': recipe.name,
              'image': request.build_absolute_uri(recipe.image.url),
@@ -351,16 +347,17 @@ class FavoriteView(APIView):
         except Recipe.DoesNotExist:
             return Response(
                 {'error': 'Рецепт не найден.'},
-                status=status.HTTP_404_NOT_FOUND)
+                status=status.HTTP_404_NOT_FOUND
+            )
 
-        favorite = Favorite.objects.filter(
-            user=request.user, recipe=recipe).first()
-        if favorite:
-            favorite.delete()
+        deleted, _ = request.user.favorites.filter(recipe=recipe).delete()
+        if deleted:
             return Response(status=status.HTTP_204_NO_CONTENT)
+
         return Response(
             {'error': 'Рецепт отсутствует в избранном.'},
-            status=status.HTTP_400_BAD_REQUEST)
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class TagViewSet(ReadOnlyModelViewSet):
