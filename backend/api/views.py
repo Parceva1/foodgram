@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.db.models import Sum
 from rest_framework import mixins, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import ListAPIView, get_object_or_404
@@ -284,30 +285,27 @@ class DownloadShoppingCartView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        cart_items = request.user.shopping_cart.select_related('recipe')
+        ingredients = (
+            request.user.shopping_cart
+            .values(
+                'recipe__ingredientrecipe__ingredient__name',
+                'recipe__ingredientrecipe__ingredient__measurement_unit'
+            )
+            .annotate(amount=Sum('recipe__ingredientrecipe__amount'))
+            .order_by('recipe__ingredientrecipe__ingredient__name')
+        )
 
-        if not cart_items.exists():
-            return Response(
-                {'error': 'Список покупок пуст.'},
-                status=status.HTTP_400_BAD_REQUEST)
+        if not ingredients:
+            return Response({'error': 'Список покупок пуст.'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        ingredients = {}
-        for item in cart_items:
-            for recipe_ingredient in item.recipe.ingredientrecipe_set.all():
-                ingredient_name = recipe_ingredient.ingredient.name
-                measurement_unit = (
-                    recipe_ingredient.ingredient.measurement_unit)
-                amount = recipe_ingredient.amount
-                if ingredient_name in ingredients:
-                    ingredients[ingredient_name]['amount'] += amount
-                else:
-                    ingredients[ingredient_name] = {
-                        'amount': amount, 'unit': measurement_unit}
-
-        shopping_list = "Список покупок:\n"
-        for name, details in ingredients.items():
-            shopping_list += (
-                f"{name} - {details['amount']} {details['unit']}\n")
+        shopping_list = 'Список покупок:\n'
+        for ingredient in ingredients:
+            name = ingredient['recipe__ingredientrecipe__ingredient__name']
+            unit = ingredient[
+                'recipe__ingredientrecipe__ingredient__measurement_unit']
+            amount = ingredient['amount']
+            shopping_list += f"{name} - {amount} {unit}\n"
 
         response = HttpResponse(
             shopping_list, content_type='text/plain; charset=utf-8')

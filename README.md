@@ -199,6 +199,9 @@ body:
     "cooking_time": 777
 }
 ```
+### Ссылка на рабочий сайта
+
+https://yam-foodgram.ddns.net/
 
 ## Авторы
 #### [_Станислав_](https://github.com/Parceva1),
